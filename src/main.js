@@ -19,13 +19,10 @@ const tween = (
 ) =>
   new Promise(
     (resolve) =>
-      gsap.to(
-        target,
-        {
-          ...variables,
-          onComplete: resolve
-        }
-      )
+      gsap.to(target, {
+        ...variables,
+        onComplete: resolve
+      })
   );
 
 const fromTo = (
@@ -59,26 +56,240 @@ const TEMPO_TRANSICAO_TEXTO = 4400;
 
 const MULTIPLICADOR_LEITURA = 1.55;
 
+/* IMAGENS DO SITE */
+
+const imagensDoSite = [
+  "/imagens/capa-livro.png",
+
+  "/imagens/passado-floresta.png",
+  "/imagens/passado-lua-cheia.png",
+  "/imagens/passado-tragedia.png",
+  "/imagens/passado-lobo-solitario.png",
+  "/imagens/passado-mudanca.png",
+
+  "/imagens/observandocassino.png",
+  "/imagens/conversacassino.png",
+  "/imagens/cassinoencontro.png",
+
+  "/imagens/tinderjasper.png",
+  "/imagens/tindermorgana.png",
+
+  "/imagens/diasdificeis.png",
+  "/imagens/diasdificeis2.png",
+
+  "/imagens/pedidodenamoro.png",
+  "/imagens/ritualmorg.png",
+  "/imagens/nos.png",
+  "/imagens/casalfinal.png",
+
+  "/imagens/parte-final-livro.png"
+];
+
+const cacheDeImagens =
+  new Map();
+
+function carregarImagem(
+  endereco,
+  prioridade = "auto"
+) {
+  if (cacheDeImagens.has(endereco)) {
+    return cacheDeImagens.get(endereco);
+  }
+
+  const carregamento =
+    new Promise((resolve) => {
+      const imagem =
+        new Image();
+
+      let finalizado = false;
+
+      const finalizar = (
+        carregou,
+        motivo = ""
+      ) => {
+        if (finalizado) {
+          return;
+        }
+
+        finalizado = true;
+
+        clearTimeout(
+          tempoLimite
+        );
+
+        resolve({
+          endereco,
+          carregou,
+          motivo
+        });
+      };
+
+      const tempoLimite =
+        setTimeout(
+          () => {
+            console.warn(
+              `Tempo excedido ao carregar: ${endereco}`
+            );
+
+            finalizar(
+              false,
+              "tempo excedido"
+            );
+          },
+          30000
+        );
+
+      imagem.decoding =
+        "async";
+
+      imagem.loading =
+        "eager";
+
+      try {
+        imagem.fetchPriority =
+          prioridade;
+      } catch {
+        // Alguns navegadores antigos não possuem fetchPriority.
+      }
+
+      imagem.onload =
+        async () => {
+          try {
+            await imagem.decode();
+          } catch {
+            // A imagem já foi carregada.
+          }
+
+          finalizar(
+            true
+          );
+        };
+
+      imagem.onerror =
+        () => {
+          console.error(
+            `Não foi possível carregar: ${endereco}`
+          );
+
+          finalizar(
+            false,
+            "arquivo não encontrado"
+          );
+        };
+
+      imagem.src =
+        endereco;
+    });
+
+  cacheDeImagens.set(
+    endereco,
+    carregamento
+  );
+
+  return carregamento;
+}
+
+async function carregarImagensEmFila(
+  lista,
+  limite,
+  aoConcluir
+) {
+  let proximoIndice = 0;
+
+  async function trabalhador() {
+    while (
+      proximoIndice <
+      lista.length
+    ) {
+      const indice =
+        proximoIndice;
+
+      proximoIndice += 1;
+
+      const endereco =
+        lista[indice];
+
+      const prioridade =
+        indice < 2
+          ? "high"
+          : "auto";
+
+      const resultado =
+        await carregarImagem(
+          endereco,
+          prioridade
+        );
+
+      aoConcluir(
+        resultado
+      );
+    }
+  }
+
+  const quantidade =
+    Math.min(
+      limite,
+      lista.length
+    );
+
+  const trabalhadores =
+    Array.from(
+      {
+        length: quantidade
+      },
+      () => trabalhador()
+    );
+
+  await Promise.all(
+    trabalhadores
+  );
+}
+
 /* MÚSICAS */
 
+function criarAudio(
+  endereco,
+  repetir
+) {
+  const audio =
+    new Audio();
+
+  audio.preload =
+    "none";
+
+  audio.loop =
+    repetir;
+
+  audio.volume = 0;
+
+  audio.src =
+    endereco;
+
+  return audio;
+}
+
 const musicaTriste =
-  new Audio(
-    "/audio/musicatriste.mp3"
+  criarAudio(
+    "/audio/musicatriste.mp3",
+    false
   );
 
 const musicaRomantica =
-  new Audio(
-    "/audio/musicaromantica.mp3"
+  criarAudio(
+    "/audio/musicaromantica.mp3",
+    true
   );
 
 const musicaRomantica2 =
-  new Audio(
-    "/audio/musicaromantica2.mp3"
+  criarAudio(
+    "/audio/musicaromantica2.mp3",
+    true
   );
 
 const musicaRomantica3 =
-  new Audio(
-    "/audio/musicaromantica3.mp3"
+  criarAudio(
+    "/audio/musicaromantica3.mp3",
+    true
   );
 
 const todasAsMusicas = [
@@ -87,19 +298,6 @@ const todasAsMusicas = [
   musicaRomantica2,
   musicaRomantica3
 ];
-
-todasAsMusicas.forEach(
-  (musica) => {
-    musica.preload = "auto";
-    musica.volume = 0;
-    musica.load();
-  }
-);
-
-musicaTriste.loop = false;
-musicaRomantica.loop = true;
-musicaRomantica2.loop = true;
-musicaRomantica3.loop = true;
 
 let musicaTristeIniciada = false;
 let musicaRomanticaIniciada = false;
@@ -111,6 +309,50 @@ let musicaSilenciada = false;
 let segundaMusicaPromise = null;
 let terceiraMusicaPromise = null;
 
+function prepararAudio(
+  musica
+) {
+  musica.preload =
+    "auto";
+
+  if (musica.readyState < 2) {
+    musica.load();
+  }
+}
+
+function prepararMusicasEmSegundoPlano() {
+  prepararAudio(
+    musicaTriste
+  );
+
+  setTimeout(
+    () => {
+      prepararAudio(
+        musicaRomantica
+      );
+    },
+    2500
+  );
+
+  setTimeout(
+    () => {
+      prepararAudio(
+        musicaRomantica2
+      );
+    },
+    6000
+  );
+
+  setTimeout(
+    () => {
+      prepararAudio(
+        musicaRomantica3
+      );
+    },
+    9500
+  );
+}
+
 async function iniciarMusicaTriste() {
   if (musicaTristeIniciada) {
     return;
@@ -119,10 +361,21 @@ async function iniciarMusicaTriste() {
   musicaTristeIniciada = true;
 
   try {
+    prepararAudio(
+      musicaTriste
+    );
+
     musicaTriste.pause();
-    musicaTriste.currentTime = 0;
+
+    try {
+      musicaTriste.currentTime = 0;
+    } catch {
+      // O áudio ainda será iniciado do começo.
+    }
+
     musicaTriste.volume = 0;
-    musicaTriste.muted = musicaSilenciada;
+    musicaTriste.muted =
+      musicaSilenciada;
 
     await musicaTriste.play();
 
@@ -156,10 +409,21 @@ async function iniciarPrimeiraMusicaRomantica() {
   musicaRomanticaIniciada = true;
 
   try {
+    prepararAudio(
+      musicaRomantica
+    );
+
     musicaRomantica.pause();
-    musicaRomantica.currentTime = 0;
+
+    try {
+      musicaRomantica.currentTime = 0;
+    } catch {
+      // O áudio ainda será iniciado do começo.
+    }
+
     musicaRomantica.volume = 0;
-    musicaRomantica.muted = musicaSilenciada;
+    musicaRomantica.muted =
+      musicaSilenciada;
 
     await musicaRomantica.play();
 
@@ -216,6 +480,10 @@ function iniciarSegundaMusicaRomantica() {
       musicaRomantica2Iniciada = true;
 
       try {
+        prepararAudio(
+          musicaRomantica2
+        );
+
         gsap.killTweensOf(
           musicaRomantica
         );
@@ -225,9 +493,16 @@ function iniciarSegundaMusicaRomantica() {
         );
 
         musicaRomantica2.pause();
-        musicaRomantica2.currentTime = 0;
+
+        try {
+          musicaRomantica2.currentTime = 0;
+        } catch {
+          // O áudio ainda será iniciado do começo.
+        }
+
         musicaRomantica2.volume = 0.001;
-        musicaRomantica2.muted = musicaSilenciada;
+        musicaRomantica2.muted =
+          musicaSilenciada;
 
         await musicaRomantica2.play();
 
@@ -282,17 +557,29 @@ function iniciarTerceiraMusicaRomantica() {
       musicaRomantica3Iniciada = true;
 
       try {
+        prepararAudio(
+          musicaRomantica3
+        );
+
         musicaRomantica3.pause();
-        musicaRomantica3.currentTime = 0;
+
+        try {
+          musicaRomantica3.currentTime = 0;
+        } catch {
+          // O áudio ainda será iniciado do começo.
+        }
+
         musicaRomantica3.volume = 0.001;
-        musicaRomantica3.muted = musicaSilenciada;
+        musicaRomantica3.muted =
+          musicaSilenciada;
 
         await musicaRomantica3.play();
 
         todasAsMusicas.forEach(
           (musica) => {
             if (
-              musica === musicaRomantica3
+              musica ===
+              musicaRomantica3
             ) {
               return;
             }
@@ -381,6 +668,152 @@ musicToggle.addEventListener(
     );
   }
 );
+
+/* CARREGAMENTO INICIAL */
+
+async function iniciarCarregamentoInicial() {
+  const loader =
+    $("#asset-loader");
+
+  const loaderBar =
+    $("#loader-bar");
+
+  const loaderPercent =
+    $("#loader-percent");
+
+  const loaderStatus =
+    $("#loader-status");
+
+  const openBook =
+    $("#open-book");
+
+  openBook.disabled = true;
+
+  let concluidas = 0;
+  let falhas = 0;
+
+  const total =
+    imagensDoSite.length;
+
+  function atualizarProgresso(
+    resultado
+  ) {
+    concluidas += 1;
+
+    if (!resultado.carregou) {
+      falhas += 1;
+    }
+
+    const porcentagem =
+      Math.round(
+        (
+          concluidas /
+          total
+        ) *
+        100
+      );
+
+    loaderBar.style.width =
+      `${porcentagem}%`;
+
+    loaderPercent.textContent =
+      `${porcentagem}%`;
+
+    if (porcentagem < 25) {
+      loaderStatus.textContent =
+        "Abrindo o livro...";
+    } else if (porcentagem < 55) {
+      loaderStatus.textContent =
+        "Organizando as memórias...";
+    } else if (porcentagem < 85) {
+      loaderStatus.textContent =
+        "Preparando os nossos momentos...";
+    } else {
+      loaderStatus.textContent =
+        "Quase pronto...";
+    }
+  }
+
+  await carregarImagensEmFila(
+    imagensDoSite,
+    3,
+    atualizarProgresso
+  );
+
+  loaderBar.style.width =
+    "100%";
+
+  loaderPercent.textContent =
+    "100%";
+
+  prepararMusicasEmSegundoPlano();
+
+  if (falhas > 0) {
+    loaderStatus.textContent =
+      "Algumas memórias não foram encontradas.";
+
+    console.warn(
+      `${falhas} imagem(ns) não foram carregadas.`
+    );
+
+    await wait(1400);
+  } else {
+    loaderStatus.textContent =
+      "Memórias prontas.";
+
+    await wait(850);
+  }
+
+  openBook.disabled = false;
+
+  document.body.classList.remove(
+    "loading"
+  );
+
+  requestAnimationFrame(
+    () => {
+      document.body.classList.add(
+        "ready"
+      );
+    }
+  );
+
+  loader.classList.add(
+    "leaving"
+  );
+
+  await wait(1200);
+
+  loader.remove();
+}
+
+iniciarCarregamentoInicial()
+  .catch(
+    (error) => {
+      console.error(
+        "Erro no carregamento inicial:",
+        error
+      );
+
+      const openBook =
+        $("#open-book");
+
+      openBook.disabled = false;
+
+      document.body.classList.remove(
+        "loading"
+      );
+
+      document.body.classList.add(
+        "ready"
+      );
+
+      $("#asset-loader")
+        ?.remove();
+
+      prepararMusicasEmSegundoPlano();
+    }
+  );
 
 /* PARTÍCULAS */
 

@@ -10,33 +10,63 @@
 
   <title>Memórias de Nós</title>
 
-  <link rel="preload" as="image" href="/imagens/capa-livro.png">
+  <link
+    rel="preload"
+    as="image"
+    href="/imagens/capa-livro.png"
+    fetchpriority="high"
+  >
 
-  <link rel="preload" as="image" href="/imagens/passado-floresta.png">
-  <link rel="preload" as="image" href="/imagens/passado-lua-cheia.png">
-  <link rel="preload" as="image" href="/imagens/passado-tragedia.png">
-  <link rel="preload" as="image" href="/imagens/passado-lobo-solitario.png">
-  <link rel="preload" as="image" href="/imagens/passado-mudanca.png">
-
-  <link rel="preload" as="image" href="/imagens/observandocassino.png">
-  <link rel="preload" as="image" href="/imagens/conversacassino.png">
-  <link rel="preload" as="image" href="/imagens/cassinoencontro.png">
-
-  <link rel="preload" as="image" href="/imagens/tinderjasper.png">
-  <link rel="preload" as="image" href="/imagens/tindermorgana.png">
-
-  <link rel="preload" as="image" href="/imagens/diasdificeis.png">
-  <link rel="preload" as="image" href="/imagens/diasdificeis2.png">
-
-  <link rel="preload" as="image" href="/imagens/pedidodenamoro.png">
-  <link rel="preload" as="image" href="/imagens/ritualmorg.png">
-  <link rel="preload" as="image" href="/imagens/nos.png">
-  <link rel="preload" as="image" href="/imagens/casalfinal.png">
-
-  <link rel="preload" as="image" href="/imagens/parte-final-livro.png">
+  <link
+    rel="preload"
+    as="image"
+    href="/imagens/passado-floresta.png"
+    fetchpriority="high"
+  >
 </head>
 
-<body>
+<body class="loading">
+
+  <!-- CARREGAMENTO INICIAL -->
+
+  <div
+    class="asset-loader"
+    id="asset-loader"
+    role="status"
+    aria-live="polite"
+  >
+    <div class="asset-loader-glow"></div>
+
+    <div class="asset-loader-content">
+      <div class="asset-loader-symbol">
+        ✦
+      </div>
+
+      <h1>
+        Preparando nossas memórias
+      </h1>
+
+      <p id="loader-status">
+        Carregando imagens...
+      </p>
+
+      <div class="asset-loader-track">
+        <div
+          class="asset-loader-bar"
+          id="loader-bar"
+        ></div>
+      </div>
+
+      <strong id="loader-percent">
+        0%
+      </strong>
+
+      <small>
+        Na primeira vez, isso pode levar alguns segundos.
+      </small>
+    </div>
+  </div>
+
   <main id="app">
 
     <div
@@ -115,6 +145,7 @@
         class="pill"
         id="open-book"
         type="button"
+        disabled
       >
         Abrir livro
       </button>

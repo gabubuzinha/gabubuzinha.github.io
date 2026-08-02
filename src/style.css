@@ -44,6 +44,241 @@ button:focus-visible {
   outline-offset: 5px;
 }
 
+/* CARREGAMENTO INICIAL */
+
+body.loading {
+  overflow: hidden;
+}
+
+body.loading #app {
+  display: none;
+}
+
+#app {
+  opacity: 0;
+  visibility: hidden;
+
+  transition:
+    opacity 1.1s ease,
+    visibility 1.1s ease;
+}
+
+body.ready #app {
+  opacity: 1;
+  visibility: visible;
+}
+
+.asset-loader {
+  position: fixed;
+  inset: 0;
+
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 25px;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      #3b0713 0%,
+      #21040b 32%,
+      #0c0104 68%,
+      #020101 100%
+    );
+
+  opacity: 1;
+  visibility: visible;
+
+  transition:
+    opacity 1.1s ease,
+    visibility 1.1s ease;
+}
+
+.asset-loader.leaving {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.asset-loader-glow {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 550px;
+  height: 550px;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(178, 42, 69, 0.25),
+      rgba(110, 10, 35, 0.13) 42%,
+      transparent 72%
+    );
+
+  filter: blur(10px);
+
+  animation:
+    loader-glow-breathe
+    4s
+    ease-in-out
+    infinite
+    alternate;
+}
+
+@keyframes loader-glow-breathe {
+  from {
+    opacity: 0.55;
+
+    transform:
+      translate(-50%, -50%)
+      scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translate(-50%, -50%)
+      scale(1.12);
+  }
+}
+
+.asset-loader-content {
+  position: relative;
+
+  z-index: 2;
+
+  width: min(90vw, 500px);
+
+  text-align: center;
+}
+
+.asset-loader-symbol {
+  margin-bottom: 22px;
+
+  color: #e8a6b4;
+  font-size: 44px;
+
+  text-shadow:
+    0 0 18px rgba(224, 104, 129, 0.75),
+    0 0 42px rgba(153, 30, 61, 0.55);
+
+  animation:
+    loader-symbol-pulse
+    2.2s
+    ease-in-out
+    infinite;
+}
+
+@keyframes loader-symbol-pulse {
+  50% {
+    opacity: 0.65;
+    transform: scale(1.15);
+  }
+}
+
+.asset-loader-content h1 {
+  margin-bottom: 14px;
+
+  font-size: clamp(27px, 5vw, 42px);
+  font-weight: normal;
+  line-height: 1.2;
+
+  color: #fff4f6;
+
+  text-shadow:
+    0 0 25px rgba(174, 50, 77, 0.25);
+}
+
+.asset-loader-content p {
+  min-height: 24px;
+
+  margin-bottom: 24px;
+
+  color: rgba(246, 218, 224, 0.72);
+
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
+.asset-loader-track {
+  width: 100%;
+  height: 8px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(229, 167, 180, 0.2);
+  border-radius: 20px;
+
+  background: rgba(10, 1, 4, 0.68);
+
+  box-shadow:
+    inset 0 0 10px rgba(0, 0, 0, 0.55),
+    0 0 25px rgba(137, 20, 47, 0.13);
+}
+
+.asset-loader-bar {
+  width: 0%;
+  height: 100%;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      #681229,
+      #c95670,
+      #eda0b1
+    );
+
+  box-shadow:
+    0 0 17px rgba(226, 100, 127, 0.72);
+
+  transition:
+    width 0.35s ease;
+}
+
+.asset-loader-content strong {
+  display: block;
+
+  margin-top: 16px;
+
+  color: #f7dfe4;
+
+  font-size: 20px;
+  font-weight: normal;
+  letter-spacing: 3px;
+}
+
+.asset-loader-content small {
+  display: block;
+
+  margin-top: 17px;
+
+  color: rgba(225, 190, 198, 0.48);
+
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: 0.7px;
+}
+
+#open-book:disabled {
+  opacity: 0.45;
+  cursor: wait;
+  pointer-events: none;
+}
+
 /* CENAS */
 
 .scene {
@@ -1438,8 +1673,8 @@ button:focus-visible {
 
   color: #f9e9ed;
 
-  cursor: pointer !important;
-  pointer-events: auto !important;
+  cursor: pointer;
+  pointer-events: auto;
 
   z-index: 999;
 
@@ -1610,7 +1845,7 @@ button:focus-visible {
 
   opacity: 0;
 
-  pointer-events: none !important;
+  pointer-events: none;
 }
 
 .tinder-art {
@@ -1668,7 +1903,7 @@ button:focus-visible {
   opacity: 0;
   visibility: hidden;
 
-  pointer-events: auto !important;
+  pointer-events: auto;
 
   box-shadow:
     0 0 25px rgba(211, 66, 101, 0.35);
@@ -1785,7 +2020,7 @@ button:focus-visible {
   left: 50%;
   bottom: 7%;
 
-  transform: translateX(-50%) !important;
+  transform: translateX(-50%);
 
   opacity: 0;
   visibility: hidden;
@@ -1800,7 +2035,7 @@ button:focus-visible {
 .outside-button:active,
 .outside-button:focus,
 .outside-button:focus-visible {
-  transform: translateX(-50%) !important;
+  transform: translateX(-50%);
 }
 
 /* CONVERSA NO GRAMADO */
@@ -1850,7 +2085,7 @@ button:focus-visible {
   opacity: 0;
   visibility: hidden;
 
-  pointer-events: none !important;
+  pointer-events: none;
 
   background-size: cover;
   background-position: center;
@@ -1896,7 +2131,7 @@ button:focus-visible {
 
   opacity: 0;
 
-  pointer-events: none !important;
+  pointer-events: none;
 
   background-image:
     radial-gradient(circle at 35% 25%, #e86682 0 4px, transparent 5px),
@@ -1914,24 +2149,24 @@ button:focus-visible {
 
   opacity: 0;
 
-  pointer-events: none !important;
+  pointer-events: none;
 
   background: rgba(0, 0, 0, 0.7);
 }
 
 #light-action {
-  z-index: 500 !important;
+  z-index: 500;
 
-  pointer-events: auto !important;
+  pointer-events: auto;
 }
 
 #hold-light {
   position: relative;
 
-  z-index: 510 !important;
+  z-index: 510;
 
-  pointer-events: auto !important;
-  cursor: pointer !important;
+  pointer-events: auto;
+  cursor: pointer;
 
   touch-action: manipulation;
   user-select: none;
@@ -1939,11 +2174,11 @@ button:focus-visible {
 
 #hold-light span,
 #hold-light b {
-  pointer-events: none !important;
+  pointer-events: none;
 }
 
 #convergence-ending {
-  z-index: 520 !important;
+  z-index: 520;
 }
 
 .orb-button {
@@ -2573,7 +2808,7 @@ button:focus-visible {
   letter-spacing: 3px;
   text-transform: uppercase;
 
-  cursor: pointer !important;
+  cursor: pointer;
 }
 
 /* LIVRO FINAL */
@@ -2673,6 +2908,19 @@ button:focus-visible {
 }
 
 @media (max-width: 600px) {
+  .asset-loader-content {
+    width: 88vw;
+  }
+
+  .asset-loader-glow {
+    width: 390px;
+    height: 390px;
+  }
+
+  .asset-loader-content h1 {
+    font-size: 29px;
+  }
+
   .music-toggle {
     right: 14px;
     top: 14px;
