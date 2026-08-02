@@ -3087,3 +3087,10 @@ body.ready #app {
     height: 390px;
   }
 }
+
+/* REMOVER ELEMENTOS DE TESTE DA CENA NÓS */
+
+#constellation,
+#us-couple {
+  display: none !important;
+}

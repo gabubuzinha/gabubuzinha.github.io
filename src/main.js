@@ -3719,46 +3719,10 @@ $("#to-us").addEventListener(
       $("#us-title")
     );
 
-    gsap.to(
-      "#constellation, #us-couple",
-      {
-        opacity: 0.88,
-        duration: 2.4,
-        stagger: 0.4
-      }
-    );
-
     await narrate(
       usLines,
       $("#us-text"),
       (index) => {
-        if (index === 1) {
-          gsap.to(
-            "#constellation span",
-            {
-              width: "90%",
-              duration: 4
-            }
-          );
-        }
-
-        if (index === 2) {
-          gsap.to(
-            "#us-couple .person:first-child",
-            {
-              x: 17,
-              duration: 2.5
-            }
-          );
-
-          gsap.to(
-            "#us-couple .person:last-child",
-            {
-              x: -17,
-              duration: 2.5
-            }
-          );
-        }
 
         if (index === 6) {
           gsap.to(
@@ -3799,14 +3763,6 @@ setupCollection(
       "#moment-game",
       {
         display: "none"
-      }
-    );
-
-    gsap.to(
-      "#constellation, #us-couple",
-      {
-        opacity: 0.28,
-        duration: 2
       }
     );
 
@@ -3906,7 +3862,7 @@ $("#last-page").addEventListener(
   }
 );
 
-/* FECHAMENTO DO LIVRO */
+/* CAPA FINAL DO LIVRO */
 
 let endingStarted = false;
 
@@ -3919,97 +3875,122 @@ $("#turn-around").addEventListener(
 
     endingStarted = true;
 
-    $("#turn-around").disabled = true;
+    const turnAround =
+      $("#turn-around");
+
+    turnAround.disabled = true;
 
     gsap.killTweensOf(
-      "#turn-around"
+      turnAround
     );
+
+    /*
+      Retira suavemente a mensagem final.
+    */
 
     await tween(
       "#wedding-question",
       {
         opacity: 0,
-        scale: 0.96,
-        duration: 1.3
+        scale: 0.97,
+        duration: 0.9,
+        ease: "power1.inOut"
       }
     );
 
     gsap.set(
       "#wedding-question",
       {
-        display: "none"
+        display: "none",
+        visibility: "hidden"
       }
     );
+
+    /*
+      Faz a imagem do casal desaparecer.
+    */
 
     await tween(
       "#wedding-final-image, .wedding-overlay",
       {
         opacity: 0,
-        duration: 1.8
+        duration: 1.2,
+        ease: "power1.inOut"
+      }
+    );
+
+    /*
+      A capa já fica completamente fechada.
+      Não haverá mais animação das páginas.
+    */
+
+    gsap.set(
+      "#closing-book-cover",
+      {
+        rotationY: 0,
+        opacity: 1
+      }
+    );
+
+    gsap.set(
+      "#closing-book-pages, #closing-book-back",
+      {
+        opacity: 0
       }
     );
 
     gsap.set(
       "#closing-book",
       {
-        visibility: "visible",
         display: "block",
+        visibility: "visible",
+
         xPercent: -50,
-        yPercent: -50
-      }
-    );
+        yPercent: -50,
 
-    await fromTo(
-      "#closing-book",
-      {
+        rotationX: 0,
+        rotationY: 0,
+
         opacity: 0,
-        scale: 0.72,
-        y: 25,
-        rotationX: 8,
-        rotationY: -8
-      },
-      {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        rotationX: 6,
-        rotationY: -5,
-        duration: 2.1,
-        ease: "power2.out"
+        scale: 0.86
       }
     );
 
-    await wait(1000);
+    /*
+      Escurece o fundo enquanto a capa final aparece.
+    */
 
-    await tween(
-      "#closing-book-cover",
-      {
-        rotationY: 0,
-        duration: 3,
-        ease: "power2.inOut"
-      }
-    );
+    await Promise.all([
+      tween(
+        "#final-darkness",
+        {
+          opacity: 0.88,
+          duration: 1.7,
+          ease: "power1.inOut"
+        }
+      ),
 
-    await wait(900);
+      tween(
+        "#closing-book",
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 1.7,
+          ease: "power2.out"
+        }
+      )
+    ]);
 
-    await tween(
-      "#final-darkness",
-      {
-        opacity: 0.84,
-        duration: 2.5,
-        ease: "power1.inOut"
-      }
-    );
+    /*
+      Pequeno movimento final, bem suave.
+    */
 
     await tween(
       "#closing-book",
       {
-        scale: 0.9,
-        y: 10,
-        rotationX: 3,
-        rotationY: 0,
+        scale: 0.97,
         duration: 2,
-        ease: "power2.inOut"
+        ease: "sine.inOut"
       }
     );
   }
