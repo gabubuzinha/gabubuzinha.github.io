@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Memórias de Nós</title>
+
+  <link rel="preload" as="image" href="/imagens/capa-livro.png">
+
+  <link rel="preload" as="image" href="/imagens/passado-floresta.png">
+  <link rel="preload" as="image" href="/imagens/passado-lua-cheia.png">
+  <link rel="preload" as="image" href="/imagens/passado-tragedia.png">
+  <link rel="preload" as="image" href="/imagens/passado-lobo-solitario.png">
+  <link rel="preload" as="image" href="/imagens/passado-mudanca.png">
+
+  <link rel="preload" as="image" href="/imagens/observandocassino.png">
+  <link rel="preload" as="image" href="/imagens/conversacassino.png">
+  <link rel="preload" as="image" href="/imagens/cassinoencontro.png">
+
+  <link rel="preload" as="image" href="/imagens/tinderjasper.png">
+  <link rel="preload" as="image" href="/imagens/tindermorgana.png">
+
+  <link rel="preload" as="image" href="/imagens/diasdificeis.png">
+  <link rel="preload" as="image" href="/imagens/diasdificeis2.png">
+
+  <link rel="preload" as="image" href="/imagens/pedidodenamoro.png">
+  <link rel="preload" as="image" href="/imagens/ritualmorg.png">
+  <link rel="preload" as="image" href="/imagens/nos.png">
+  <link rel="preload" as="image" href="/imagens/casalfinal.png">
+
+  <link rel="preload" as="image" href="/imagens/parte-final-livro.png">
+</head>
+
+<body>
+  <main id="app">
+
+    <div
+      class="ambient-particles"
+      id="ambient-particles"
+      aria-hidden="true"
+    ></div>
+
+    <div
+      class="memory-wash"
+      id="memory-wash"
+      aria-hidden="true"
+    ></div>
+
+    <button
+      class="music-toggle"
+      id="music-toggle"
+      type="button"
+      aria-label="Silenciar música"
+      title="Silenciar música"
+    >
+      ♪
+    </button>
+
+    <!-- ABERTURA -->
+
+    <section
+      class="scene opening active"
+      id="opening"
+    >
+      <div class="opening-background"></div>
+      <div class="opening-halo"></div>
+
+      <div class="book-wrap">
+        <div
+          class="book"
+          id="book"
+        >
+          <div class="book-back"></div>
+          <div class="book-page-stack"></div>
+
+          <div
+            class="book-pages"
+            id="book-pages"
+          >
+            <div class="page-border"></div>
+
+            <p id="page-line">
+              Algumas histórias começam antes mesmo
+              de sabermos que estamos vivendo uma.
+            </p>
+          </div>
+
+          <div
+            class="book-cover"
+            id="book-cover"
+          >
+            <div
+              class="cover-face cover-front"
+              aria-label="Capa do livro Memórias de Nós"
+            ></div>
+
+            <div
+              class="cover-face cover-inside"
+              aria-hidden="true"
+            >
+              <div class="inside-decoration">
+                <span>☾</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button
+        class="pill"
+        id="open-book"
+        type="button"
+      >
+        Abrir livro
+      </button>
+
+      <small class="opening-note">
+        Use fones para uma experiência melhor
+      </small>
+    </section>
+
+    <!-- PASSADO -->
+
+    <section
+      class="scene past"
+      id="past"
+    >
+      <div class="past-visuals">
+
+        <div
+          class="past-image active"
+          id="past-image-forest"
+        ></div>
+
+        <div
+          class="past-image"
+          id="past-image-moon"
+        ></div>
+
+        <div
+          class="past-image"
+          id="past-image-tragedy"
+        ></div>
+
+        <div
+          class="past-image"
+          id="past-image-lonely"
+        ></div>
+
+        <div
+          class="past-image"
+          id="past-image-change"
+        ></div>
+
+      </div>
+
+      <div class="past-dark-layer"></div>
+      <div class="past-moving-mist"></div>
+      <div class="past-film-grain"></div>
+
+      <div
+        class="scene-glow"
+        id="past-glow"
+      ></div>
+
+      <p
+        class="narration past-narration"
+        id="past-text"
+      ></p>
+    </section>
+
+    <!-- PORTAL -->
+
+    <section
+      class="scene memory-gate"
+      id="memory-gate"
+    >
+      <div class="memory-rings">
+        <i></i>
+        <i></i>
+        <i></i>
+      </div>
+
+      <div class="memory-stream stream-one"></div>
+      <div class="memory-stream stream-two"></div>
+
+      <div class="memory-dots">
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+      </div>
+
+      <div class="center-stack">
+        <p id="memory-question">
+          Você se lembra de onde tudo começou?
+        </p>
+
+        <button
+          class="memory-button"
+          id="remember"
+          type="button"
+        >
+          <span></span>
+          <b>Lembrar</b>
+        </button>
+
+        <small>
+          Toque na memória
+        </small>
+      </div>
+    </section>
+
+    <!-- CASSINO -->
+
+    <section
+      class="scene casino"
+      id="casino"
+    >
+      <div class="casino-images">
+
+        <div
+          class="casino-image active"
+          id="casino-observando"
+        ></div>
+
+        <div
+          class="casino-image"
+          id="casino-conversa"
+        ></div>
+
+      </div>
+
+      <div class="casino-overlay"></div>
+
+      <div
+        class="chapter"
+        id="casino-title"
+      >
+        <small>Memória I</small>
+        <h2>Antes de Nós</h2>
+      </div>
+
+      <p
+        class="narration"
+        id="casino-text"
+      ></p>
+    </section>
+
+    <!-- TINDER -->
+
+    <section
+      class="scene match"
+      id="match"
+    >
+      <p
+        class="transition-text"
+        id="time-text"
+      ></p>
+
+      <div
+        class="tinder-art"
+        id="tinder-jasper"
+        aria-label="Perfil de Jasper"
+      ></div>
+
+      <div
+        class="tinder-art"
+        id="tinder-morgana"
+        aria-label="Perfil de Morgana"
+      ></div>
+
+      <button
+        class="tinder-heart"
+        id="heart"
+        type="button"
+        aria-label="Curtir perfil"
+      >
+        <span>♥</span>
+      </button>
+
+      <div
+        class="match-result"
+        id="match-result"
+      >
+        <h2>Deu MATCH</h2>
+      </div>
+
+      <p
+        class="outside-line"
+        id="match-line"
+      >
+        Talvez o destino só estivesse esperando
+        que nós dois fizéssemos a mesma escolha.
+      </p>
+
+      <div
+        class="message"
+        id="message"
+      >
+        <b>✉</b>
+
+        <span>
+          <strong>Morgana</strong>
+          enviou uma mensagem.
+        </span>
+      </div>
+
+      <button
+        class="pill outside-button"
+        id="open-chat"
+        type="button"
+      >
+        Abrir conversa
+      </button>
+    </section>
+
+    <!-- CONVERSA NO GRAMADO -->
+
+    <section
+      class="scene lawn"
+      id="lawn"
+    >
+      <div
+        class="chapter"
+        id="lawn-title"
+      >
+        <small>Memória II</small>
+
+        <h2>
+          A noite em que tudo começou
+        </h2>
+      </div>
+
+      <p
+        class="narration"
+        id="lawn-text"
+      ></p>
+
+      <div
+        class="interaction"
+        id="star-game"
+      >
+        <div class="instruction">
+          <p>
+            Toque nas três estrelas e descubra
+            o que Jasper pensou naquela noite.
+          </p>
+
+          <small id="star-count">
+            0 de 3 pensamentos encontrados
+          </small>
+        </div>
+
+        <button
+          class="collect star-a"
+          type="button"
+          data-text="Eu passaria a noite inteira aqui só ouvindo você falar."
+        >
+          ✦
+        </button>
+
+        <button
+          class="collect star-b"
+          type="button"
+          data-text="Fazia tempo que conversar com alguém não era tão leve."
+        >
+          ✦
+        </button>
+
+        <button
+          class="collect star-c"
+          type="button"
+          data-text="Dá até um frio na barriga ver o quanto a gente combina."
+        >
+          ✦
+        </button>
+
+        <div
+          class="reveal"
+          id="star-reveal"
+        ></div>
+      </div>
+
+      <div
+        class="ending"
+        id="lawn-ending"
+      >
+        <p>
+          Talvez tenha sido ali que eu percebi
+          que algo estava acontecendo comigo.
+        </p>
+
+        <span>
+          Depois daquela noite, eu já não queria
+          passar um dia sem encontrar você.
+        </span>
+
+        <button
+          class="pill"
+          id="to-convergence"
+          type="button"
+        >
+          Continuar a história
+        </button>
+      </div>
+    </section>
+
+    <!-- QUASE -->
+
+    <section
+      class="scene convergence"
+      id="convergence"
+    >
+      <div
+        class="convergence-photo"
+        id="convergence-photo"
+      ></div>
+
+      <div
+        class="convergence-photo"
+        id="convergence-photo-2"
+      ></div>
+
+      <div class="wine-particles"></div>
+
+      <div
+        class="chapter"
+        id="convergence-title"
+      >
+        <small>Memória III</small>
+        <h2>Quase</h2>
+      </div>
+
+      <div
+        class="standing-couple"
+        id="convergence-couple"
+      >
+        <div
+          class="person"
+          id="conv-jasper"
+        >
+          <i></i>
+          <b></b>
+        </div>
+
+        <div
+          class="person"
+          id="conv-morgana"
+        >
+          <i></i>
+          <b></b>
+        </div>
+      </div>
+
+      <div
+        class="darkness"
+        id="darkness"
+      ></div>
+
+      <p
+        class="narration"
+        id="convergence-text"
+      ></p>
+
+      <div
+        class="center-stack hidden"
+        id="light-action"
+      >
+        <p>
+          Mesmo na escuridão,
+          ainda havia uma luz.
+        </p>
+
+        <button
+          class="orb-button"
+          id="hold-light"
+          type="button"
+        >
+          <span></span>
+          <b>Segurar a luz</b>
+        </button>
+      </div>
+
+      <div
+        class="ending"
+        id="convergence-ending"
+      >
+        <p>
+          Mas nós ficamos.
+        </p>
+
+        <span>
+          Depois de quase perder o amanhã,
+          eu só queria viver todos os próximos
+          ao seu lado.
+        </span>
+
+        <button
+          class="pill"
+          id="to-rain"
+          type="button"
+        >
+          Voltar àquela noite
+        </button>
+      </div>
+    </section>
+
+    <!-- CHUVA E PEDIDO -->
+
+    <section
+      class="scene rain"
+      id="rain"
+    >
+      <div
+        class="rain-proposal-image"
+        id="rain-proposal-image"
+      ></div>
+
+      <div
+        class="chapter"
+        id="rain-title"
+      >
+        <small>Memória IV</small>
+        <h2>A Chuva</h2>
+      </div>
+
+      <p
+        class="narration"
+        id="rain-text"
+      ></p>
+
+      <div
+        class="center-stack hidden"
+        id="love-action"
+      >
+        <p>
+          Naquela noite, você disse
+          que me amava.
+        </p>
+
+        <small>
+          Algumas palavras mudam
+          o rumo de uma vida.
+        </small>
+
+        <button
+          class="heart-orb"
+          id="answer-love"
+          type="button"
+        >
+          <b>♥</b>
+          <span>Responder</span>
+        </button>
+      </div>
+
+      <div
+        class="single-line"
+        id="love-answer"
+      >
+        E eu também te amava.
+      </div>
+
+      <div
+        class="proposal-dating"
+        id="dating-proposal"
+      >
+        <p>Morgana...</p>
+
+        <h2>
+          Quer namorar comigo?
+        </h2>
+
+        <button
+          class="pill"
+          id="remember-yes"
+          type="button"
+        >
+          Relembrar o seu sim
+        </button>
+      </div>
+
+      <div
+        class="ending"
+        id="rain-ending"
+      >
+        <p>
+          E você disse sim.
+        </p>
+
+        <span>
+          Foi naquela chuva que o nosso amor
+          deixou de ser apenas uma possibilidade
+          e finalmente ganhou um nome.
+        </span>
+
+        <button
+          class="pill"
+          id="to-ritual"
+          type="button"
+        >
+          Continuar
+        </button>
+      </div>
+    </section>
+
+    <!-- RITUAL -->
+
+    <section
+      class="scene ritual"
+      id="ritual"
+    >
+      <div
+        class="ritual-circle"
+        id="ritual-circle"
+      >
+        <i>ᚱ</i>
+        <i>ᛟ</i>
+        <i>ᚨ</i>
+        <i>ᛞ</i>
+        <i>ᛉ</i>
+        <i>ᚾ</i>
+      </div>
+
+      <div class="candles"></div>
+      <div class="ritual-mist"></div>
+
+      <div
+        class="standing-couple ritual-couple"
+        id="ritual-couple"
+      >
+        <div class="person">
+          <i></i>
+          <b></b>
+        </div>
+
+        <div
+          class="person"
+          id="ritual-jasper"
+        >
+          <i></i>
+          <b></b>
+        </div>
+      </div>
+
+      <div
+        class="chapter"
+        id="ritual-title"
+      >
+        <small>Memória V</small>
+
+        <h2>
+          O que voltou com você
+        </h2>
+      </div>
+
+      <p
+        class="narration"
+        id="ritual-text"
+      ></p>
+
+      <div
+        class="interaction"
+        id="fragment-game"
+      >
+        <div class="instruction">
+          <p>
+            As memórias começaram a voltar.
+          </p>
+
+          <span>
+            Toque nos quatro fragmentos.
+          </span>
+
+          <small id="fragment-count">
+            0 de 4 fragmentos encontrados
+          </small>
+        </div>
+
+        <button
+          class="collect shard-a"
+          type="button"
+          data-text="O medo de descobrir quem você havia sido."
+        >
+          ◆
+        </button>
+
+        <button
+          class="collect shard-b"
+          type="button"
+          data-text="A dor de encarar uma verdade que você nunca pediu para carregar."
+        >
+          ◆
+        </button>
+
+        <button
+          class="collect shard-c"
+          type="button"
+          data-text="A culpa que tentou convencer você de que não merecia continuar."
+        >
+          ◆
+        </button>
+
+        <button
+          class="collect shard-d"
+          type="button"
+          data-text="E a coragem de olhar para tudo isso e ainda escolher mudar."
+        >
+          ◆
+        </button>
+
+        <div
+          class="reveal"
+          id="fragment-reveal"
+        ></div>
+      </div>
+
+      <div
+        class="ending"
+        id="ritual-ending"
+      >
+        <p>
+          Quando você abriu os olhos,
+          talvez tenha temido que eu enxergasse
+          você de outra forma.
+        </p>
+
+        <strong>
+          Mas eu não vi um monstro.
+        </strong>
+
+        <span>
+          Eu vi a mulher que amo, inteira,
+          ferida, corajosa e ainda capaz de
+          escolher quem deseja ser.
+        </span>
+
+        <button
+          class="pill"
+          id="to-us"
+          type="button"
+        >
+          Continuar nossas memórias
+        </button>
+      </div>
+    </section>
+
+    <!-- NÓS -->
+
+    <section
+      class="scene us"
+      id="us"
+    >
+      <div class="stars"></div>
+
+      <div
+        class="constellation"
+        id="constellation"
+      >
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+
+        <span></span>
+      </div>
+
+      <div
+        class="standing-couple us-couple"
+        id="us-couple"
+      >
+        <div class="person">
+          <i></i>
+          <b></b>
+        </div>
+
+        <div class="person">
+          <i></i>
+          <b></b>
+        </div>
+      </div>
+
+      <div
+        class="scene-glow"
+        id="us-glow"
+      ></div>
+
+      <div
+        class="chapter"
+        id="us-title"
+      >
+        <small>Memória VI</small>
+        <h2>Nós</h2>
+      </div>
+
+      <p
+        class="narration"
+        id="us-text"
+      ></p>
+
+      <div
+        class="interaction"
+        id="moment-game"
+      >
+        <div class="instruction">
+          <p>
+            Nem todas as memórias
+            precisam ser grandiosas.
+          </p>
+
+          <span>
+            Toque nos cinco momentos.
+          </span>
+
+          <small id="moment-count">
+            0 de 5 momentos encontrados
+          </small>
+        </div>
+
+        <button
+          class="collect moment-a"
+          type="button"
+          data-text="Nos dias bons, você sempre foi a primeira pessoa que eu queria encontrar."
+        >
+          ✦
+        </button>
+
+        <button
+          class="collect moment-b"
+          type="button"
+          data-text="Nos dias difíceis, era a sua mão que eu procurava."
+        >
+          ♥
+        </button>
+
+        <button
+          class="collect moment-c"
+          type="button"
+          data-text="Você transformou o silêncio em conforto e o caos em algo que podíamos enfrentar juntos."
+        >
+          ☾
+        </button>
+
+        <button
+          class="collect moment-d"
+          type="button"
+          data-text="Até os momentos mais comuns ficaram especiais porque tinham você."
+        >
+          ∞
+        </button>
+
+        <button
+          class="collect moment-e"
+          type="button"
+          data-text="Sem que eu percebesse, você deixou de ser apenas parte da minha vida e se tornou o meu lar."
+        >
+          ⌂
+        </button>
+
+        <div
+          class="reveal"
+          id="moment-reveal"
+        ></div>
+      </div>
+
+      <div
+        class="ending"
+        id="us-ending"
+      >
+        <p>
+          Não foram apenas as grandes memórias
+          que me deram certeza.
+        </p>
+
+        <strong>
+          Foi perceber que, em todos os futuros
+          que eu conseguia imaginar,
+          você estava lá.
+        </strong>
+
+        <span>
+          E ainda existe uma última página
+          que eu quero escrever com você.
+        </span>
+
+        <button
+          class="pill"
+          id="last-page"
+          type="button"
+        >
+          Virar a última página
+        </button>
+      </div>
+    </section>
+
+    <!-- BLOCO FINAL -->
+
+    <section
+      class="scene wedding"
+      id="wedding"
+    >
+      <div
+        class="wedding-final-image"
+        id="wedding-final-image"
+      ></div>
+
+      <div class="wedding-overlay"></div>
+
+      <p
+        class="narration"
+        id="wedding-text"
+      ></p>
+
+      <div
+        class="wedding-question"
+        id="wedding-question"
+      >
+        <small>
+          A última página
+        </small>
+
+        <p>
+          Morgana...
+        </p>
+
+        <h2>
+          A última página deste livro
+          está bem atrás de você.
+        </h2>
+
+        <span>
+          Vire-se... porque eu quero que você
+          veja o que está escrito nela
+          com os próprios olhos.
+        </span>
+
+        <button
+          class="yes-button"
+          id="turn-around"
+          type="button"
+        >
+          <b>✦</b>
+          Vire-se
+        </button>
+      </div>
+
+      <div
+        class="closing-book"
+        id="closing-book"
+      >
+        <div class="closing-book-back"></div>
+        <div class="closing-book-pages"></div>
+
+        <div
+          class="closing-book-cover"
+          id="closing-book-cover"
+        ></div>
+      </div>
+
+      <div
+        class="final-darkness"
+        id="final-darkness"
+      ></div>
+    </section>
+
+  </main>
+
+  <script
+    type="module"
+    src="/src/main.js"
+  ></script>
+</body>
+</html>
