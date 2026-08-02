@@ -58,128 +58,273 @@ const MULTIPLICADOR_LEITURA = 1.55;
 
 /* IMAGENS DO SITE */
 
-const imagensDoSite = [
-  "/imagens/capa-livro.png",
+/*
+  Primeiro serão preparadas apenas a capa
+  e as imagens da primeira memória.
 
-  "/imagens/passado-floresta.png",
-  "/imagens/passado-lua-cheia.png",
-  "/imagens/passado-tragedia.png",
-  "/imagens/passado-lobo-solitario.png",
-  "/imagens/passado-mudanca.png",
+  As outras cenas serão carregadas depois,
+  em segundo plano e na ordem da história.
+*/
 
-  "/imagens/observandocassino.png",
-  "/imagens/conversacassino.png",
-  "/imagens/cassinoencontro.png",
+const gruposDeImagens = {
+  abertura: [
+    "/imagens/capa-livro.png"
+  ],
 
-  "/imagens/tinderjasper.png",
-  "/imagens/tindermorgana.png",
+  passado: [
+    "/imagens/passado-floresta.png",
+    "/imagens/passado-lua-cheia.png",
+    "/imagens/passado-tragedia.png",
+    "/imagens/passado-lobo-solitario.png",
+    "/imagens/passado-mudanca.png"
+  ],
 
-  "/imagens/diasdificeis.png",
-  "/imagens/diasdificeis2.png",
+  cassino: [
+    "/imagens/observandocassino.png",
+    "/imagens/conversacassino.png"
+  ],
 
-  "/imagens/pedidodenamoro.png",
-  "/imagens/ritualmorg.png",
-  "/imagens/nos.png",
-  "/imagens/casalfinal.png",
+  tinder: [
+    "/imagens/tinderjasper.png",
+    "/imagens/tindermorgana.png"
+  ],
 
-  "/imagens/parte-final-livro.png"
+  gramado: [
+    "/imagens/cassinoencontro.png"
+  ],
+
+  quase: [
+    "/imagens/diasdificeis.png",
+    "/imagens/diasdificeis2.png"
+  ],
+
+  chuva: [
+    "/imagens/pedidodenamoro.png"
+  ],
+
+  ritual: [
+    "/imagens/ritualmorg.png"
+  ],
+
+  nos: [
+    "/imagens/nos.png"
+  ],
+
+  final: [
+    "/imagens/casalfinal.png",
+    "/imagens/parte-final-livro.png"
+  ]
+};
+
+const imagensCriticas = [
+  ...gruposDeImagens.abertura,
+  ...gruposDeImagens.passado
 ];
+
+/*
+  Guarda tanto a promessa quanto o elemento de imagem.
+
+  Manter o elemento vivo impede que o navegador
+  descarte a imagem já preparada da memória.
+*/
 
 const cacheDeImagens =
   new Map();
+
+const imagensMantidas =
+  new Map();
+
+let cacheVisual =
+  null;
+
+function obterCacheVisual() {
+  if (cacheVisual) {
+    return cacheVisual;
+  }
+
+  cacheVisual =
+    document.createElement(
+      "div"
+    );
+
+  cacheVisual.id =
+    "image-memory-cache";
+
+  cacheVisual.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  Object.assign(
+    cacheVisual.style,
+    {
+      position: "fixed",
+      left: "-10000px",
+      top: "-10000px",
+      width: "2px",
+      height: "2px",
+      overflow: "hidden",
+      opacity: "0.001",
+      pointerEvents: "none",
+      zIndex: "-1"
+    }
+  );
+
+  document.body.appendChild(
+    cacheVisual
+  );
+
+  return cacheVisual;
+}
+
+function manterImagemNaMemoria(
+  imagem,
+  endereco
+) {
+  if (
+    imagensMantidas.has(
+      endereco
+    )
+  ) {
+    return;
+  }
+
+  imagem.alt = "";
+
+  imagem.width = 1;
+  imagem.height = 1;
+
+  Object.assign(
+    imagem.style,
+    {
+      display: "block",
+      width: "1px",
+      height: "1px",
+      objectFit: "cover"
+    }
+  );
+
+  obterCacheVisual()
+    .appendChild(
+      imagem
+    );
+
+  imagensMantidas.set(
+    endereco,
+    imagem
+  );
+}
 
 function carregarImagem(
   endereco,
   prioridade = "auto"
 ) {
-  if (cacheDeImagens.has(endereco)) {
-    return cacheDeImagens.get(endereco);
+  if (
+    cacheDeImagens.has(
+      endereco
+    )
+  ) {
+    return cacheDeImagens.get(
+      endereco
+    );
   }
 
   const carregamento =
-    new Promise((resolve) => {
-      const imagem =
-        new Image();
+    new Promise(
+      (resolve) => {
+        const imagem =
+          new Image();
 
-      let finalizado = false;
+        let finalizado =
+          false;
 
-      const finalizar = (
-        carregou,
-        motivo = ""
-      ) => {
-        if (finalizado) {
-          return;
-        }
-
-        finalizado = true;
-
-        clearTimeout(
-          tempoLimite
-        );
-
-        resolve({
-          endereco,
+        const terminar = (
           carregou,
-          motivo
-        });
-      };
-
-      const tempoLimite =
-        setTimeout(
-          () => {
-            console.warn(
-              `Tempo excedido ao carregar: ${endereco}`
-            );
-
-            finalizar(
-              false,
-              "tempo excedido"
-            );
-          },
-          30000
-        );
-
-      imagem.decoding =
-        "async";
-
-      imagem.loading =
-        "eager";
-
-      try {
-        imagem.fetchPriority =
-          prioridade;
-      } catch {
-        // Alguns navegadores antigos não possuem fetchPriority.
-      }
-
-      imagem.onload =
-        async () => {
-          try {
-            await imagem.decode();
-          } catch {
-            // A imagem já foi carregada.
+          motivo = ""
+        ) => {
+          if (finalizado) {
+            return;
           }
 
-          finalizar(
-            true
+          finalizado = true;
+
+          clearTimeout(
+            tempoLimite
           );
+
+          resolve({
+            endereco,
+            carregou,
+            motivo
+          });
         };
 
-      imagem.onerror =
-        () => {
-          console.error(
-            `Não foi possível carregar: ${endereco}`
+        const tempoLimite =
+          setTimeout(
+            () => {
+              console.warn(
+                `Tempo excedido ao carregar: ${endereco}`
+              );
+
+              terminar(
+                false,
+                "tempo excedido"
+              );
+            },
+            45000
           );
 
-          finalizar(
-            false,
-            "arquivo não encontrado"
-          );
-        };
+        imagem.loading =
+          "eager";
 
-      imagem.src =
-        endereco;
-    });
+        imagem.decoding =
+          "async";
+
+        try {
+          imagem.fetchPriority =
+            prioridade;
+        } catch {
+          // Navegadores antigos podem não possuir fetchPriority.
+        }
+
+        imagem.onload =
+          async () => {
+            try {
+              await imagem.decode();
+            } catch {
+              /*
+                A imagem já terminou de carregar.
+                Alguns navegadores rejeitam decode()
+                mesmo quando ela está pronta.
+              */
+            }
+
+            manterImagemNaMemoria(
+              imagem,
+              endereco
+            );
+
+            terminar(
+              true
+            );
+          };
+
+        imagem.onerror =
+          () => {
+            console.error(
+              `Imagem não encontrada: ${endereco}`
+            );
+
+            terminar(
+              false,
+              "arquivo não encontrado"
+            );
+          };
+
+        imagem.src =
+          endereco;
+      }
+    );
 
   cacheDeImagens.set(
     endereco,
@@ -192,7 +337,7 @@ function carregarImagem(
 async function carregarImagensEmFila(
   lista,
   limite,
-  aoConcluir
+  aoConcluir = () => {}
 ) {
   let proximoIndice = 0;
 
@@ -242,6 +387,48 @@ async function carregarImagensEmFila(
 
   await Promise.all(
     trabalhadores
+  );
+}
+
+async function carregarRestanteEmSegundoPlano() {
+  /*
+    Ordem das imagens baseada na ordem da história.
+
+    Apenas duas imagens serão carregadas simultaneamente,
+    evitando sobrecarregar a internet e a memória.
+  */
+
+  const filaDeGrupos = [
+    gruposDeImagens.cassino,
+    gruposDeImagens.tinder,
+    gruposDeImagens.gramado,
+    gruposDeImagens.quase,
+    gruposDeImagens.chuva,
+    gruposDeImagens.ritual,
+    gruposDeImagens.nos,
+    gruposDeImagens.final
+  ];
+
+  for (
+    const grupo of filaDeGrupos
+  ) {
+    await carregarImagensEmFila(
+      grupo,
+      2
+    );
+
+    /*
+      Pequena pausa para o navegador respirar
+      entre um grupo de cenas e outro.
+    */
+
+    await wait(
+      250
+    );
+  }
+
+  console.log(
+    "Todas as imagens da história foram preparadas."
   );
 }
 
@@ -692,15 +879,25 @@ async function iniciarCarregamentoInicial() {
   let concluidas = 0;
   let falhas = 0;
 
+  /*
+    A porcentagem inicial considera apenas
+    a capa e as imagens da memória do passado.
+
+    Essas são as imagens necessárias
+    para começar a experiência sem travar.
+  */
+
   const total =
-    imagensDoSite.length;
+    imagensCriticas.length;
 
   function atualizarProgresso(
     resultado
   ) {
     concluidas += 1;
 
-    if (!resultado.carregou) {
+    if (
+      !resultado.carregou
+    ) {
       falhas += 1;
     }
 
@@ -719,24 +916,37 @@ async function iniciarCarregamentoInicial() {
     loaderPercent.textContent =
       `${porcentagem}%`;
 
-    if (porcentagem < 25) {
+    if (
+      porcentagem < 25
+    ) {
       loaderStatus.textContent =
-        "Abrindo o livro...";
-    } else if (porcentagem < 55) {
+        "Preparando a capa...";
+    } else if (
+      porcentagem < 55
+    ) {
       loaderStatus.textContent =
-        "Organizando as memórias...";
-    } else if (porcentagem < 85) {
+        "Abrindo as primeiras memórias...";
+    } else if (
+      porcentagem < 85
+    ) {
       loaderStatus.textContent =
-        "Preparando os nossos momentos...";
+        "Preparando o passado...";
     } else {
       loaderStatus.textContent =
         "Quase pronto...";
     }
   }
 
+  /*
+    Somente duas imagens são baixadas ao mesmo tempo.
+
+    Isso é mais estável em celulares
+    e conexões mais lentas.
+  */
+
   await carregarImagensEmFila(
-    imagensDoSite,
-    3,
+    imagensCriticas,
+    2,
     atualizarProgresso
   );
 
@@ -746,23 +956,35 @@ async function iniciarCarregamentoInicial() {
   loaderPercent.textContent =
     "100%";
 
-  prepararMusicasEmSegundoPlano();
-
-  if (falhas > 0) {
+  if (
+    falhas > 0
+  ) {
     loaderStatus.textContent =
-      "Algumas memórias não foram encontradas.";
+      "Algumas imagens iniciais não foram encontradas.";
 
     console.warn(
-      `${falhas} imagem(ns) não foram carregadas.`
+      `${falhas} imagem(ns) inicial(is) não foram carregadas.`
     );
 
-    await wait(1400);
+    await wait(
+      1500
+    );
   } else {
     loaderStatus.textContent =
       "Memórias prontas.";
 
-    await wait(850);
+    await wait(
+      850
+    );
   }
+
+  /*
+    Agora o livro pode ser exibido.
+
+    As imagens do passado continuam guardadas
+    em elementos de imagem fora da tela,
+    prontas para serem usadas.
+  */
 
   openBook.disabled = false;
 
@@ -782,9 +1004,41 @@ async function iniciarCarregamentoInicial() {
     "leaving"
   );
 
-  await wait(1200);
+  await wait(
+    1200
+  );
 
   loader.remove();
+
+  /*
+    Depois que a capa já apareceu,
+    as próximas cenas começam a ser preparadas.
+
+    Isso acontece enquanto a pessoa abre o livro
+    e acompanha a primeira parte da história.
+  */
+
+  carregarRestanteEmSegundoPlano()
+    .catch(
+      (error) => {
+        console.warn(
+          "Algumas imagens posteriores não foram preparadas.",
+          error
+        );
+      }
+    );
+
+  /*
+    A música começa a ser preparada depois,
+    para não disputar internet com as imagens iniciais.
+  */
+
+  setTimeout(
+    () => {
+      prepararMusicasEmSegundoPlano();
+    },
+    1800
+  );
 }
 
 iniciarCarregamentoInicial()
@@ -811,10 +1065,14 @@ iniciarCarregamentoInicial()
       $("#asset-loader")
         ?.remove();
 
+      carregarRestanteEmSegundoPlano()
+        .catch(
+          () => {}
+        );
+
       prepararMusicasEmSegundoPlano();
     }
   );
-
 /* PARTÍCULAS */
 
 function criarParticulas() {
