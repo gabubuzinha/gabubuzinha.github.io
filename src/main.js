@@ -68,51 +68,51 @@ const MULTIPLICADOR_LEITURA = 1.55;
 
 const gruposDeImagens = {
   abertura: [
-    "/imagens/capa-livro.png"
+    "/imagens/capa-livro.webp"
   ],
 
   passado: [
-    "/imagens/passado-floresta.png",
-    "/imagens/passado-lua-cheia.png",
-    "/imagens/passado-tragedia.png",
-    "/imagens/passado-lobo-solitario.png",
-    "/imagens/passado-mudanca.png"
+    "/imagens/passado-floresta.webp",
+    "/imagens/passado-lua-cheia.webp",
+    "/imagens/passado-tragedia.webp",
+    "/imagens/passado-lobo-solitario.webp",
+    "/imagens/passado-mudanca.webp"
   ],
 
   cassino: [
-    "/imagens/observandocassino.png",
-    "/imagens/conversacassino.png"
+    "/imagens/observandocassino.webp",
+    "/imagens/conversacassino.webp"
   ],
 
   tinder: [
-    "/imagens/tinderjasper.png",
-    "/imagens/tindermorgana.png"
+    "/imagens/tinderjasper.webp",
+    "/imagens/tindermorgana.webp"
   ],
 
   gramado: [
-    "/imagens/cassinoencontro.png"
+    "/imagens/cassinoencontro.webp"
   ],
 
   quase: [
-    "/imagens/diasdificeis.png",
-    "/imagens/diasdificeis2.png"
+    "/imagens/diasdificeis.webp",
+    "/imagens/diasdificeis2.webp"
   ],
 
   chuva: [
-    "/imagens/pedidodenamoro.png"
+    "/imagens/pedidodenamoro.webp"
   ],
 
   ritual: [
-    "/imagens/ritualmorg.png"
+    "/imagens/ritualmorg.webp"
   ],
 
   nos: [
-    "/imagens/nos.png"
+    "/imagens/nos.webp"
   ],
 
   final: [
-    "/imagens/casalfinal.png",
-    "/imagens/parte-final-livro.png"
+    "/imagens/casalfinal.webp",
+    "/imagens/parte-final-livro.webp"
   ]
 };
 

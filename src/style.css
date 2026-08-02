@@ -1237,7 +1237,7 @@ body.ready #app {
   background-color: var(--wine-dark);
 
   background-image:
-    url("/imagens/capa-livro.png");
+    url("/imagens/capa-livro.webp");
 
   background-size: cover;
   background-position: center;
@@ -1356,27 +1356,27 @@ body.ready #app {
 
 #past-image-forest {
   background-image:
-    url("/imagens/passado-floresta.png");
+    url("/imagens/passado-floresta.webp");
 }
 
 #past-image-moon {
   background-image:
-    url("/imagens/passado-lua-cheia.png");
+    url("/imagens/passado-lua-cheia.webp");
 }
 
 #past-image-tragedy {
   background-image:
-    url("/imagens/passado-tragedia.png");
+    url("/imagens/passado-tragedia.webp");
 }
 
 #past-image-lonely {
   background-image:
-    url("/imagens/passado-lobo-solitario.png");
+    url("/imagens/passado-lobo-solitario.webp");
 }
 
 #past-image-change {
   background-image:
-    url("/imagens/passado-mudanca.png");
+    url("/imagens/passado-mudanca.webp");
 }
 
 .past-dark-layer {
@@ -1800,12 +1800,12 @@ body.ready #app {
 
 #casino-observando {
   background-image:
-    url("/imagens/observandocassino.png");
+    url("/imagens/observandocassino.webp");
 }
 
 #casino-conversa {
   background-image:
-    url("/imagens/conversacassino.png");
+    url("/imagens/conversacassino.webp");
 }
 
 .casino-overlay {
@@ -1876,12 +1876,12 @@ body.ready #app {
 
 #tinder-jasper {
   background-image:
-    url("/imagens/tinderjasper.png");
+    url("/imagens/tinderjasper.webp");
 }
 
 #tinder-morgana {
   background-image:
-    url("/imagens/tindermorgana.png");
+    url("/imagens/tindermorgana.webp");
 }
 
 .tinder-heart {
@@ -2060,7 +2060,7 @@ body.ready #app {
       rgba(4, 1, 3, 0.17) 50%,
       rgba(4, 1, 3, 0.7) 100%
     ),
-    url("/imagens/cassinoencontro.png");
+    url("/imagens/cassinoencontro.webp");
 
   background-size: cover;
   background-position: center;
@@ -2119,7 +2119,7 @@ body.ready #app {
       rgba(3, 1, 2, 0.18) 52%,
       rgba(3, 1, 2, 0.74) 100%
     ),
-    url("/imagens/diasdificeis.png");
+    url("/imagens/diasdificeis.webp");
 }
 
 #convergence-photo-2 {
@@ -2132,7 +2132,7 @@ body.ready #app {
       rgba(3, 1, 2, 0.18) 52%,
       rgba(3, 1, 2, 0.74) 100%
     ),
-    url("/imagens/diasdificeis2.png");
+    url("/imagens/diasdificeis2.webp");
 }
 
 .wine-particles {
@@ -2267,7 +2267,7 @@ body.ready #app {
       rgba(4, 1, 3, 0.12) 50%,
       rgba(4, 1, 3, 0.68) 100%
     ),
-    url("/imagens/pedidodenamoro.png");
+    url("/imagens/pedidodenamoro.webp");
 
   background-size: cover;
   background-position: center;
@@ -2358,7 +2358,7 @@ body.ready #app {
       rgba(5, 1, 3, 0.18) 52%,
       rgba(5, 1, 3, 0.72) 100%
     ),
-    url("/imagens/ritualmorg.png");
+    url("/imagens/ritualmorg.webp");
 
   background-size: cover;
   background-position: center;
@@ -2549,7 +2549,7 @@ body.ready #app {
       rgba(5, 1, 3, 0.15) 50%,
       rgba(5, 1, 3, 0.7) 100%
     ),
-    url("/imagens/nos.png");
+    url("/imagens/nos.webp");
 
   background-size: cover;
   background-position: center;
@@ -2692,7 +2692,7 @@ body.ready #app {
   pointer-events: none;
 
   background-image:
-    url("/imagens/casalfinal.png");
+    url("/imagens/casalfinal.webp");
 
   background-size: cover;
   background-position: center;
@@ -2878,7 +2878,7 @@ body.ready #app {
   background-color: var(--wine-dark);
 
   background-image:
-    url("/imagens/parte-final-livro.png");
+    url("/imagens/parte-final-livro.webp");
 
   background-size: cover;
   background-position: center;
