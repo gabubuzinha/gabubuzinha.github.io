@@ -986,11 +986,61 @@ async function iniciarCarregamentoInicial() {
     prontas para serem usadas.
   */
 
-  openBook.disabled = false;
+  
+openBook.disabled = false;
 
-  document.body.classList.remove(
-    "loading"
-  );
+/*
+  Deixa a primeira imagem do passado já desenhada
+  atrás da abertura antes de clicar em Abrir livro.
+*/
+
+prepararImagemInicialDoPassado();
+
+const openingScene =
+  $("#opening");
+
+const pastScene =
+  $("#past");
+
+gsap.set(
+  openingScene,
+  {
+    display: "flex",
+    visibility: "visible",
+    opacity: 1,
+    zIndex: 2
+  }
+);
+
+gsap.set(
+  pastScene,
+  {
+    display: "block",
+    visibility: "visible",
+    opacity: 1,
+    zIndex: 1,
+    pointerEvents: "none"
+  }
+);
+
+/*
+  Força o navegador a desenhar a imagem
+  antes da animação de zoom.
+*/
+
+void pastScene.offsetWidth;
+
+await new Promise(
+  (resolve) =>
+    requestAnimationFrame(
+      () =>
+        requestAnimationFrame(resolve)
+    )
+);
+
+document.body.classList.remove(
+  "loading"
+);
 
   requestAnimationFrame(
     () => {
