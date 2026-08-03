@@ -108,9 +108,25 @@ const gruposDeImagens = {
   ]
 };
 
+/*
+  Além da abertura e do passado,
+  carrega a primeira foto de cada bloco
+  antes de liberar o livro.
+*/
+
 const imagensCriticas = [
   ...gruposDeImagens.abertura,
-  ...gruposDeImagens.passado
+  ...gruposDeImagens.passado,
+
+  gruposDeImagens.cassino[0],
+  gruposDeImagens.tinder[0],
+  gruposDeImagens.gramado[0],
+  gruposDeImagens.quase[0],
+  gruposDeImagens.chuva[0],
+  gruposDeImagens.ritual[0],
+  gruposDeImagens.nos[0],
+  gruposDeImagens.final[0],
+  gruposDeImagens.final[1]
 ];
 
 const cacheDeImagens =
@@ -336,7 +352,7 @@ async function carregarImagensEmFila(
         lista[indice];
 
       const prioridade =
-        indice < 2
+        indice < 3
           ? "high"
           : "auto";
 
@@ -988,7 +1004,7 @@ async function iniciarCarregamentoInicial() {
 
   await carregarImagensEmFila(
     imagensCriticas,
-    2,
+    3,
     atualizarProgresso
   );
 
@@ -1022,11 +1038,6 @@ async function iniciarCarregamentoInicial() {
 
   openBook.disabled = false;
 
-  /*
-    A imagem da floresta é exibida em tamanho real
-    atrás da abertura antes do livro aparecer.
-  */
-
   prepararImagemInicialDoPassado();
 
   gsap.set(
@@ -1056,7 +1067,9 @@ async function iniciarCarregamentoInicial() {
     (resolve) =>
       requestAnimationFrame(
         () =>
-          requestAnimationFrame(resolve)
+          requestAnimationFrame(
+            resolve
+          )
       )
   );
 
@@ -1181,24 +1194,28 @@ async function efeitoDeMemoria() {
   const wash =
     $("#memory-wash");
 
+  gsap.killTweensOf(
+    wash
+  );
+
   gsap.set(
     wash,
     {
       visibility: "visible",
       opacity: 0,
-      scale: 0.1,
-      rotation: -15
+      scale: 0.35,
+      rotation: -8
     }
   );
 
   await tween(
     wash,
     {
-      opacity: 0.6,
-      scale: 0.9,
-      rotation: 8,
-      duration: 1.5,
-      ease: "power2.in"
+      opacity: 0.42,
+      scale: 0.85,
+      rotation: 4,
+      duration: 0.5,
+      ease: "power1.inOut"
     }
   );
 
@@ -1206,10 +1223,10 @@ async function efeitoDeMemoria() {
     wash,
     {
       opacity: 0,
-      scale: 1.8,
-      rotation: 25,
-      duration: 2.3,
-      ease: "power2.out"
+      scale: 1.4,
+      rotation: 12,
+      duration: 0.75,
+      ease: "power1.out"
     }
   );
 
@@ -1221,27 +1238,122 @@ async function efeitoDeMemoria() {
   );
 }
 
+const esperarPinturaDaCena =
+  () =>
+    new Promise(
+      (resolve) =>
+        requestAnimationFrame(
+          () =>
+            requestAnimationFrame(
+              resolve
+            )
+        )
+    );
+
+async function prepararProximaCena(
+  next
+) {
+  gsap.killTweensOf(
+    next
+  );
+
+  gsap.set(
+    next,
+    {
+      display: "block",
+      visibility: "visible",
+      opacity: 0.01,
+      pointerEvents: "none",
+      zIndex: 1
+    }
+  );
+
+  const elementosDaCena = [
+    next,
+    ...next.querySelectorAll("*")
+  ];
+
+  elementosDaCena.forEach(
+    (elemento) => {
+      const estilo =
+        getComputedStyle(
+          elemento
+        );
+
+      if (
+        estilo.backgroundImage !==
+        "none"
+      ) {
+        void elemento.offsetWidth;
+
+        elemento
+          .getBoundingClientRect();
+      }
+    }
+  );
+
+  void next.offsetWidth;
+
+  await esperarPinturaDaCena();
+
+  await wait(
+    120
+  );
+}
+
 async function changeScene(
   current,
   next
 ) {
-  const memoryEffect =
-    efeitoDeMemoria();
-
-  await tween(
-    current,
-    {
-      opacity: 0,
-      duration: 2.2,
-      ease: "power1.inOut"
-    }
+  gsap.killTweensOf(
+    current
   );
 
   gsap.set(
     current,
     {
+      display: "block",
+      visibility: "visible",
+      opacity: 1,
+      pointerEvents: "none",
+      zIndex: 2
+    }
+  );
+
+  await prepararProximaCena(
+    next
+  );
+
+  await Promise.all([
+    tween(
+      current,
+      {
+        opacity: 0,
+        duration: 1.15,
+        ease: "power1.inOut"
+      }
+    ),
+
+    tween(
+      next,
+      {
+        opacity: 1,
+        duration: 1.15,
+        ease: "power1.inOut"
+      }
+    ),
+
+    efeitoDeMemoria()
+  ]);
+
+  gsap.set(
+    current,
+    {
+      display: "none",
       visibility: "hidden",
-      display: "none"
+      opacity: 0,
+      pointerEvents: "none",
+      zIndex: "auto"
     }
   );
 
@@ -1250,20 +1362,11 @@ async function changeScene(
     {
       display: "block",
       visibility: "visible",
-      opacity: 0
-    }
-  );
-
-  await tween(
-    next,
-    {
       opacity: 1,
-      duration: 3,
-      ease: "power1.inOut"
+      pointerEvents: "auto",
+      zIndex: "auto"
     }
   );
-
-  await memoryEffect;
 }
 
 async function showChapter(
@@ -2234,8 +2337,7 @@ async function narrarCassino() {
     );
   }
 }
-
-/* ABERTURA CORRIGIDA */
+/* ABERTURA */
 
 let started = false;
 
@@ -2313,16 +2415,7 @@ $("#open-book").addEventListener(
       }
     );
 
-    /*
-      Tempo para ler a frase da página.
-    */
-
     await wait(4500);
-
-    /*
-      A imagem já está visível atrás do livro.
-      Aqui não existe mais espera de 1400 ou 1800.
-    */
 
     prepararImagemInicialDoPassado();
 
@@ -2348,15 +2441,35 @@ $("#open-book").addEventListener(
       }
     );
 
+    const elementosDoPassado = [
+      scenes.past,
+      ...scenes.past.querySelectorAll(
+        "*"
+      )
+    ];
+
+    elementosDoPassado.forEach(
+      (elemento) => {
+        const estilo =
+          getComputedStyle(
+            elemento
+          );
+
+        if (
+          estilo.backgroundImage !==
+          "none"
+        ) {
+          void elemento.offsetWidth;
+
+          elemento
+            .getBoundingClientRect();
+        }
+      }
+    );
+
     void scenes.past.offsetWidth;
 
-    await new Promise(
-      (resolve) =>
-        requestAnimationFrame(
-          () =>
-            requestAnimationFrame(resolve)
-        )
-    );
+    await esperarPinturaDaCena();
 
     gsap.set(
       book,
@@ -3612,11 +3725,6 @@ $("#to-ritual").addEventListener(
     await showChapter(
       $("#ritual-title")
     );
-
-    /*
-      Somente as luzes permanecem.
-      Os bonecos e o círculo foram removidos.
-    */
 
     gsap.to(
       ".candles",
