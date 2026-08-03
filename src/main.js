@@ -58,14 +58,6 @@ const MULTIPLICADOR_LEITURA = 1.55;
 
 /* IMAGENS DO SITE */
 
-/*
-  Primeiro serão preparadas apenas a capa
-  e as imagens da primeira memória.
-
-  As outras cenas serão carregadas depois,
-  em segundo plano e na ordem da história.
-*/
-
 const gruposDeImagens = {
   abertura: [
     "/imagens/capa-livro.webp"
@@ -120,13 +112,6 @@ const imagensCriticas = [
   ...gruposDeImagens.abertura,
   ...gruposDeImagens.passado
 ];
-
-/*
-  Guarda tanto a promessa quanto o elemento de imagem.
-
-  Manter o elemento vivo impede que o navegador
-  descarte a imagem já preparada da memória.
-*/
 
 const cacheDeImagens =
   new Map();
@@ -284,7 +269,7 @@ function carregarImagem(
           imagem.fetchPriority =
             prioridade;
         } catch {
-          // Navegadores antigos podem não possuir fetchPriority.
+          // Navegadores antigos.
         }
 
         imagem.onload =
@@ -292,11 +277,7 @@ function carregarImagem(
             try {
               await imagem.decode();
             } catch {
-              /*
-                A imagem já terminou de carregar.
-                Alguns navegadores rejeitam decode()
-                mesmo quando ela está pronta.
-              */
+              // A imagem já terminou de carregar.
             }
 
             manterImagemNaMemoria(
@@ -391,13 +372,6 @@ async function carregarImagensEmFila(
 }
 
 async function carregarRestanteEmSegundoPlano() {
-  /*
-    Ordem das imagens baseada na ordem da história.
-
-    Apenas duas imagens serão carregadas simultaneamente,
-    evitando sobrecarregar a internet e a memória.
-  */
-
   const filaDeGrupos = [
     gruposDeImagens.cassino,
     gruposDeImagens.tinder,
@@ -416,11 +390,6 @@ async function carregarRestanteEmSegundoPlano() {
       grupo,
       2
     );
-
-    /*
-      Pequena pausa para o navegador respirar
-      entre um grupo de cenas e outro.
-    */
 
     await wait(
       250
@@ -557,7 +526,7 @@ async function iniciarMusicaTriste() {
     try {
       musicaTriste.currentTime = 0;
     } catch {
-      // O áudio ainda será iniciado do começo.
+      // Começará do início.
     }
 
     musicaTriste.volume = 0;
@@ -605,7 +574,7 @@ async function iniciarPrimeiraMusicaRomantica() {
     try {
       musicaRomantica.currentTime = 0;
     } catch {
-      // O áudio ainda será iniciado do começo.
+      // Começará do início.
     }
 
     musicaRomantica.volume = 0;
@@ -684,7 +653,7 @@ function iniciarSegundaMusicaRomantica() {
         try {
           musicaRomantica2.currentTime = 0;
         } catch {
-          // O áudio ainda será iniciado do começo.
+          // Começará do início.
         }
 
         musicaRomantica2.volume = 0.001;
@@ -753,7 +722,7 @@ function iniciarTerceiraMusicaRomantica() {
         try {
           musicaRomantica3.currentTime = 0;
         } catch {
-          // O áudio ainda será iniciado do começo.
+          // Começará do início.
         }
 
         musicaRomantica3.volume = 0.001;
@@ -856,6 +825,94 @@ musicToggle.addEventListener(
   }
 );
 
+/* CENAS */
+
+const scenes = {
+  opening: $("#opening"),
+  past: $("#past"),
+  gate: $("#memory-gate"),
+  casino: $("#casino"),
+  match: $("#match"),
+  lawn: $("#lawn"),
+  convergence: $("#convergence"),
+  rain: $("#rain"),
+  ritual: $("#ritual"),
+  us: $("#us"),
+  wedding: $("#wedding")
+};
+
+/* IMAGENS DO PASSADO */
+
+const pastImages = {
+  forest:
+    $("#past-image-forest"),
+
+  moon:
+    $("#past-image-moon"),
+
+  tragedy:
+    $("#past-image-tragedy"),
+
+  lonely:
+    $("#past-image-lonely"),
+
+  change:
+    $("#past-image-change")
+};
+
+let currentPastImage =
+  pastImages.forest;
+
+function prepararImagemInicialDoPassado() {
+  Object.values(
+    pastImages
+  ).forEach(
+    (image) => {
+      gsap.killTweensOf(
+        image
+      );
+
+      gsap.set(
+        image,
+        {
+          opacity: 0,
+          visibility: "hidden",
+          scale: 1.025
+        }
+      );
+
+      image.classList.remove(
+        "active"
+      );
+    }
+  );
+
+  currentPastImage =
+    pastImages.forest;
+
+  currentPastImage.classList.add(
+    "active"
+  );
+
+  gsap.set(
+    currentPastImage,
+    {
+      opacity: 1,
+      visibility: "visible",
+      scale: 1.025
+    }
+  );
+
+  gsap.to(
+    currentPastImage,
+    {
+      scale: 1,
+      duration: 23,
+      ease: "none"
+    }
+  );
+}
+
 /* CARREGAMENTO INICIAL */
 
 async function iniciarCarregamentoInicial() {
@@ -878,14 +935,6 @@ async function iniciarCarregamentoInicial() {
 
   let concluidas = 0;
   let falhas = 0;
-
-  /*
-    A porcentagem inicial considera apenas
-    a capa e as imagens da memória do passado.
-
-    Essas são as imagens necessárias
-    para começar a experiência sem travar.
-  */
 
   const total =
     imagensCriticas.length;
@@ -937,13 +986,6 @@ async function iniciarCarregamentoInicial() {
     }
   }
 
-  /*
-    Somente duas imagens são baixadas ao mesmo tempo.
-
-    Isso é mais estável em celulares
-    e conexões mais lentas.
-  */
-
   await carregarImagensEmFila(
     imagensCriticas,
     2,
@@ -978,69 +1020,49 @@ async function iniciarCarregamentoInicial() {
     );
   }
 
-  /*
-    Agora o livro pode ser exibido.
+  openBook.disabled = false;
 
-    As imagens do passado continuam guardadas
-    em elementos de imagem fora da tela,
-    prontas para serem usadas.
+  /*
+    A imagem da floresta é exibida em tamanho real
+    atrás da abertura antes do livro aparecer.
   */
 
-  
-openBook.disabled = false;
+  prepararImagemInicialDoPassado();
 
-/*
-  Deixa a primeira imagem do passado já desenhada
-  atrás da abertura antes de clicar em Abrir livro.
-*/
+  gsap.set(
+    scenes.opening,
+    {
+      display: "flex",
+      visibility: "visible",
+      opacity: 1,
+      zIndex: 2
+    }
+  );
 
-prepararImagemInicialDoPassado();
+  gsap.set(
+    scenes.past,
+    {
+      display: "block",
+      visibility: "visible",
+      opacity: 1,
+      zIndex: 1,
+      pointerEvents: "none"
+    }
+  );
 
-const openingScene =
-  $("#opening");
+  void scenes.past.offsetWidth;
 
-const pastScene =
-  $("#past");
+  await new Promise(
+    (resolve) =>
+      requestAnimationFrame(
+        () =>
+          requestAnimationFrame(resolve)
+      )
+  );
 
-gsap.set(
-  openingScene,
-  {
-    display: "flex",
-    visibility: "visible",
-    opacity: 1,
-    zIndex: 2
-  }
-);
-
-gsap.set(
-  pastScene,
-  {
-    display: "block",
-    visibility: "visible",
-    opacity: 1,
-    zIndex: 1,
-    pointerEvents: "none"
-  }
-);
-
-/*
-  Força o navegador a desenhar a imagem
-  antes da animação de zoom.
-*/
-
-void pastScene.offsetWidth;
-
-await new Promise(
-  (resolve) =>
-    requestAnimationFrame(
-      () =>
-        requestAnimationFrame(resolve)
-    )
-);
-
-document.body.classList.remove(
-  "loading"
-);
+  document.body.classList.remove(
+    "loading"
+  );
 
   requestAnimationFrame(
     () => {
@@ -1060,14 +1082,6 @@ document.body.classList.remove(
 
   loader.remove();
 
-  /*
-    Depois que a capa já apareceu,
-    as próximas cenas começam a ser preparadas.
-
-    Isso acontece enquanto a pessoa abre o livro
-    e acompanha a primeira parte da história.
-  */
-
   carregarRestanteEmSegundoPlano()
     .catch(
       (error) => {
@@ -1077,11 +1091,6 @@ document.body.classList.remove(
         );
       }
     );
-
-  /*
-    A música começa a ser preparada depois,
-    para não disputar internet com as imagens iniciais.
-  */
 
   setTimeout(
     () => {
@@ -1123,6 +1132,7 @@ iniciarCarregamentoInicial()
       prepararMusicasEmSegundoPlano();
     }
   );
+
 /* PARTÍCULAS */
 
 function criarParticulas() {
@@ -1397,93 +1407,7 @@ function pulse(
   );
 }
 
-/* CENAS */
-
-const scenes = {
-  opening: $("#opening"),
-  past: $("#past"),
-  gate: $("#memory-gate"),
-  casino: $("#casino"),
-  match: $("#match"),
-  lawn: $("#lawn"),
-  convergence: $("#convergence"),
-  rain: $("#rain"),
-  ritual: $("#ritual"),
-  us: $("#us"),
-  wedding: $("#wedding")
-};
-
-/* IMAGENS DO PASSADO */
-
-const pastImages = {
-  forest:
-    $("#past-image-forest"),
-
-  moon:
-    $("#past-image-moon"),
-
-  tragedy:
-    $("#past-image-tragedy"),
-
-  lonely:
-    $("#past-image-lonely"),
-
-  change:
-    $("#past-image-change")
-};
-
-let currentPastImage =
-  pastImages.forest;
-
-function prepararImagemInicialDoPassado() {
-  Object.values(
-    pastImages
-  ).forEach(
-    (image) => {
-      gsap.killTweensOf(
-        image
-      );
-
-      gsap.set(
-        image,
-        {
-          opacity: 0,
-          visibility: "hidden",
-          scale: 1.025
-        }
-      );
-
-      image.classList.remove(
-        "active"
-      );
-    }
-  );
-
-  currentPastImage =
-    pastImages.forest;
-
-  currentPastImage.classList.add(
-    "active"
-  );
-
-  gsap.set(
-    currentPastImage,
-    {
-      opacity: 1,
-      visibility: "visible",
-      scale: 1.025
-    }
-  );
-
-  gsap.to(
-    currentPastImage,
-    {
-      scale: 1,
-      duration: 23,
-      ease: "none"
-    }
-  );
-}
+/* TROCAS DE IMAGENS */
 
 async function trocarImagemDoPassado(
   imageName
@@ -1569,8 +1493,6 @@ async function trocarImagemDoPassado(
 
   await wait(900);
 }
-
-/* IMAGENS DO CASSINO */
 
 const casinoImages = {
   observing:
@@ -2313,7 +2235,7 @@ async function narrarCassino() {
   }
 }
 
-/* ABERTURA */
+/* ABERTURA CORRIGIDA */
 
 let started = false;
 
@@ -2342,22 +2264,26 @@ $("#open-book").addEventListener(
 
     button.disabled = true;
 
-    await tween(
-      button,
-      {
-        opacity: 0,
-        y: 15,
-        duration: 0.9
-      }
-    );
+    await Promise.all([
+      tween(
+        button,
+        {
+          opacity: 0,
+          y: 15,
+          duration: 0.7,
+          ease: "power1.inOut"
+        }
+      ),
 
-    await tween(
-      ".opening-note",
-      {
-        opacity: 0,
-        duration: 0.8
-      }
-    );
+      tween(
+        ".opening-note",
+        {
+          opacity: 0,
+          duration: 0.7,
+          ease: "power1.inOut"
+        }
+      )
+    ]);
 
     await tween(
       book,
@@ -2365,7 +2291,7 @@ $("#open-book").addEventListener(
         scale: 1.1,
         y: -16,
         rotationY: 2,
-        duration: 1.9,
+        duration: 1.4,
         ease: "power1.inOut"
       }
     );
@@ -2374,7 +2300,7 @@ $("#open-book").addEventListener(
       cover,
       {
         rotationY: -178,
-        duration: 3.4,
+        duration: 2.6,
         ease: "power2.inOut"
       }
     );
@@ -2383,17 +2309,126 @@ $("#open-book").addEventListener(
       page,
       {
         opacity: 1,
-        duration: 1.7
+        duration: 1
       }
     );
 
+    /*
+      Tempo para ler a frase da página.
+    */
+
     await wait(4500);
 
-    await tween(
+    /*
+      A imagem já está visível atrás do livro.
+      Aqui não existe mais espera de 1400 ou 1800.
+    */
+
+    prepararImagemInicialDoPassado();
+
+    gsap.set(
+      scenes.opening,
+      {
+        display: "flex",
+        visibility: "visible",
+        opacity: 1,
+        zIndex: 2,
+        pointerEvents: "none"
+      }
+    );
+
+    gsap.set(
+      scenes.past,
+      {
+        display: "block",
+        visibility: "visible",
+        opacity: 1,
+        zIndex: 1,
+        pointerEvents: "none"
+      }
+    );
+
+    void scenes.past.offsetWidth;
+
+    await new Promise(
+      (resolve) =>
+        requestAnimationFrame(
+          () =>
+            requestAnimationFrame(resolve)
+        )
+    );
+
+    gsap.set(
+      book,
+      {
+        transformOrigin: "50% 50%"
+      }
+    );
+
+    const timeline =
+      gsap.timeline();
+
+    timeline.to(
       page,
       {
         opacity: 0,
-        duration: 1.15
+        duration: 0.5,
+        ease: "power1.inOut"
+      },
+      0
+    );
+
+    timeline.to(
+      book,
+      {
+        scale: 6.2,
+        x: 0,
+        y: 0,
+        rotationX: 0,
+        rotationY: 0,
+        opacity: 0,
+        duration: 1.7,
+        ease: "power2.inOut"
+      },
+      0.05
+    );
+
+    timeline.to(
+      cover,
+      {
+        opacity: 0,
+        duration: 0.7,
+        ease: "power1.inOut"
+      },
+      0.25
+    );
+
+    timeline.to(
+      ".book-back, .book-page-stack, .book-pages",
+      {
+        opacity: 0,
+        duration: 0.75,
+        ease: "power1.inOut"
+      },
+      0.3
+    );
+
+    timeline.to(
+      scenes.opening,
+      {
+        opacity: 0,
+        duration: 0.8,
+        ease: "power1.inOut"
+      },
+      0.75
+    );
+
+    await new Promise(
+      (resolve) => {
+        timeline.eventCallback(
+          "onComplete",
+          resolve
+        );
       }
     );
 
@@ -2406,28 +2441,28 @@ $("#open-book").addEventListener(
       }
     );
 
-    await wait(1400);
-
-    prepararImagemInicialDoPassado();
+    gsap.set(
+      scenes.opening,
+      {
+        display: "none",
+        visibility: "hidden",
+        opacity: 0,
+        zIndex: "auto"
+      }
+    );
 
     gsap.set(
       scenes.past,
       {
         display: "block",
         visibility: "visible",
-        opacity: 0,
-        zIndex: 1
+        opacity: 1,
+        pointerEvents: "auto",
+        zIndex: "auto"
       }
     );
 
-    gsap.set(
-      book,
-      {
-        transformOrigin: "50% 50%"
-      }
-    );
-
-    await wait(1800);
+    await wait(300);
 
     await narrarPassado();
 
@@ -3578,40 +3613,22 @@ $("#to-ritual").addEventListener(
       $("#ritual-title")
     );
 
-    gsap.to(
-      "#ritual-circle, .candles, #ritual-couple",
-      {
-        opacity: 1,
-        duration: 2.4,
-        stagger: 0.35
-      }
-    );
+    /*
+      Somente as luzes permanecem.
+      Os bonecos e o círculo foram removidos.
+    */
 
     gsap.to(
-      "#ritual-circle",
+      ".candles",
       {
-        rotationZ: 360,
-        duration: 40,
-        repeat: -1,
-        ease: "none"
+        opacity: 1,
+        duration: 2.4
       }
     );
 
     await narrate(
       ritualLines,
-      $("#ritual-text"),
-      (index) => {
-        if (index === 4) {
-          gsap.to(
-            "#ritual-jasper",
-            {
-              x: -20,
-              opacity: 0.85,
-              duration: 2.5
-            }
-          );
-        }
-      }
+      $("#ritual-text")
     );
 
     showGame(
@@ -3690,7 +3707,6 @@ $("#to-us").addEventListener(
       usLines,
       $("#us-text"),
       (index) => {
-
         if (index === 6) {
           gsap.to(
             "#us-glow",
@@ -3851,10 +3867,6 @@ $("#turn-around").addEventListener(
       turnAround
     );
 
-    /*
-      Retira suavemente a mensagem final.
-    */
-
     await tween(
       "#wedding-question",
       {
@@ -3873,10 +3885,6 @@ $("#turn-around").addEventListener(
       }
     );
 
-    /*
-      Faz a imagem do casal desaparecer.
-    */
-
     await tween(
       "#wedding-final-image, .wedding-overlay",
       {
@@ -3885,11 +3893,6 @@ $("#turn-around").addEventListener(
         ease: "power1.inOut"
       }
     );
-
-    /*
-      A capa já fica completamente fechada.
-      Não haverá mais animação das páginas.
-    */
 
     gsap.set(
       "#closing-book-cover",
@@ -3923,10 +3926,6 @@ $("#turn-around").addEventListener(
       }
     );
 
-    /*
-      Escurece o fundo enquanto a capa final aparece.
-    */
-
     await Promise.all([
       tween(
         "#final-darkness",
@@ -3947,10 +3946,6 @@ $("#turn-around").addEventListener(
         }
       )
     ]);
-
-    /*
-      Pequeno movimento final, bem suave.
-    */
 
     await tween(
       "#closing-book",
